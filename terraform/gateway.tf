@@ -2,11 +2,13 @@ resource "aws_api_gateway_rest_api" "startsmart_api" {
   name        = "StartSmartAPI"
   description = "REST API for event ingestion"
 }
+# apigw/track
 resource "aws_api_gateway_resource" "track" {
   rest_api_id = aws_api_gateway_rest_api.startsmart_api.id
   parent_id   = aws_api_gateway_rest_api.startsmart_api.root_resource_id
   path_part   = "track"
 }
+# POST /track
 resource "aws_api_gateway_method" "post_event" {
   rest_api_id   = aws_api_gateway_rest_api.startsmart_api.id
   resource_id   = aws_api_gateway_resource.track.id
@@ -35,7 +37,7 @@ resource "aws_api_gateway_stage" "stage" {
   stage_name    = "dev"
 }
 
-# ----
+# ----OPTIONS
 
 resource "aws_api_gateway_method" "options_track" {
   rest_api_id   = aws_api_gateway_rest_api.startsmart_api.id
