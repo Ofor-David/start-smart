@@ -3,16 +3,20 @@ import './App.css';
 
 function App() {
   const [status, setStatus] = useState('');
-  
   const apiEndpoint = import.meta.env.VITE_API_URL;
   console.log('API Endpoint:', apiEndpoint);
 
   const sendEvent = async (eventType) => {
+    // Fake data for testing
+    const now = new Date();
+    const startTime = now.toISOString();
+    const endTime = new Date(now.getTime() + 3600000).toISOString(); // +1 hour
+
     const event = {
-      event_type: eventType,
-      user_id: 'user_' + Math.floor(Math.random() * 1000),
-      timestamp: new Date().toISOString(),
-      device: navigator.userAgent
+      title: `Test ${eventType}`,
+      description: `Triggered event type: ${eventType}`,
+      startTime,
+      endTime
     };
 
     try {
@@ -23,9 +27,10 @@ function App() {
       });
 
       if (!response.ok) throw new Error('Network response was not ok');
-      
-      setStatus(`✅ Event sent: ${eventType}`);
-      console.log('Event sent:', event);
+
+      const result = await response.json();
+      console.log('Event sent:', result);
+      setStatus(`✅ ${eventType} event sent successfully`);
     } catch (error) {
       console.error('Error sending event:', error);
       setStatus('❌ Failed to send event');
