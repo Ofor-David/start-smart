@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "event_lake" {
-  bucket = "startsmart-event-lake"
+  bucket = var.bucket_name
 
   tags = {
     Name        = "StartSmart Event Lake"

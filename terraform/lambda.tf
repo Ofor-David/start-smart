@@ -5,7 +5,7 @@ data "archive_file" "lambda_zip" {
 }
 
 resource "aws_lambda_function" "startsmart_handler" {
-  function_name = "startsmart-event-handler"
+  function_name = var.lambda_func_name
   handler       = "lambda.handler"
   runtime       = "python3.12"
   role          = aws_iam_role.lambda_exec_role.arn

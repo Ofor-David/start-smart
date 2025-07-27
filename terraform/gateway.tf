@@ -1,5 +1,5 @@
 resource "aws_api_gateway_rest_api" "startsmart_api" {
-  name        = "StartSmartAPI"
+  name        = var.api_gateway_name
   description = "REST API for event ingestion"
 }
 # apigw/track
