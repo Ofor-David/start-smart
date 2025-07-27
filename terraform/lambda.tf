@@ -13,6 +13,12 @@ resource "aws_lambda_function" "startsmart_handler" {
   filename            = data.archive_file.lambda_zip.output_path
   source_code_hash    = data.archive_file.lambda_zip.output_base64sha256
   timeout             = 5
+
+  environment {
+    variables = {
+      BUCKET_NAME = var.bucket_name
+    }
+  }
 }
 
 resource "aws_lambda_permission" "api_gateway_permission" {
