@@ -1,7 +1,7 @@
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_file = "${path.module}/lambda.py"
-  output_path = "${path.module}/lambda.zip"
+  source_file = "${path.module}/../src/lambda.py"
+  output_path = "${path.module}/../src/lambda.zip"
 }
 
 resource "aws_lambda_function" "startsmart_handler" {
