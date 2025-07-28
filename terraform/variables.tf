@@ -33,3 +33,10 @@ variable "lambda_func_name" {
   description = "lambda function name"
   type = string
 }
+
+variable "athena_bucket_name" {
+  description = "S3 Bucket name for Athena query results"
+  type        = string
+  default     = "startsmart-athena-results"
+  
+}
