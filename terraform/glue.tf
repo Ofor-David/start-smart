@@ -1,5 +1,5 @@
 resource "aws_glue_catalog_database" "event_lake_db" {
-  name = "event-lake-db"
+  name = "event_lake_db"
 }
 
 resource "aws_glue_crawler" "event_crawler" {
