@@ -46,3 +46,9 @@ variable "athena_lamdba_func_name" {
   type = string
   default = "athena-trigger-function"
 }
+
+variable "enable_force_destroy" {
+  description = "Enable force destroy for ALL S3 buckets"
+  type = bool
+  default = false
+}

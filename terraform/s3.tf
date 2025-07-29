@@ -1,5 +1,6 @@
 resource "aws_s3_bucket" "event_lake" {
   bucket = var.bucket_name
+  force_destroy = var.enable_force_destroy
 
   tags = {
     Name        = "StartSmart Event Lake"
@@ -27,6 +28,7 @@ resource "aws_s3_bucket_versioning" "event_lake_versioning" {
 # Athena query result bucket 
 resource "aws_s3_bucket" "athena_results_bucket" {
   bucket = var.athena_bucket_name
+  force_destroy = var.enable_force_destroy
 
 }
 
