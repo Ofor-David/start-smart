@@ -2,7 +2,7 @@
 resource "aws_cloudwatch_event_rule" "daily_athena_query" {
   name                = "daily-athena-query"
   description         = "Triggers Athena query Lambda every day at 5 AM UTC"
-  schedule_expression = "cron(0 5 * * ? *)"  # 5:00 AM UTC daily
+  schedule_expression = var.execution_frequency
 }
 
 # Lambda function to be triggered by the event rule

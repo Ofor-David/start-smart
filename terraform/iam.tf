@@ -112,7 +112,8 @@ resource "aws_iam_role_policy" "athena__policy" {
           "s3:PutObject",
           "s3:GetBucketLocation",
           "s3:ListBucket",
-        "s3:GetObject"]
+          "s3:GetObject",
+        ]
         Resource = [
           "${aws_s3_bucket.athena_results_bucket.arn}",
           "${aws_s3_bucket.athena_results_bucket.arn}/*",
@@ -124,6 +125,7 @@ resource "aws_iam_role_policy" "athena__policy" {
           "athena:StartQueryExecution",
           "athena:GetQueryExecution",
           "athena:GetQueryResults",
+          "glue:GetDatabase"
         ],
         Resource = "*"
       }

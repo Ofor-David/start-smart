@@ -50,7 +50,8 @@ resource "aws_lambda_function" "athena_trigger" {
 
   environment {
     variables = {
-      ATHENA_OUTPUT_LOCATION = "s3://${var.athena_bucket_name}/results/"
+      ATHENA_OUTPUT_LOCATION = "s3://${var.athena_bucket_name}/results/",
+      CRAWLER_NAME = aws_glue_crawler.event_crawler.name
     }
   }
 }

@@ -36,3 +36,16 @@ resource "aws_glue_crawler" "event_crawler" {
     }
   })
 }
+
+resource "aws_glue_trigger" "crawler_trigger" {
+  name     = "daily-crawler-trigger"
+  type     = "SCHEDULED"
+  schedule = var.execution_frequency  # Every day at 6 AM UTC
+
+  actions {
+    crawler_name = aws_glue_crawler.event_crawler.name
+  }
+
+  start_on_creation = true
+}
+

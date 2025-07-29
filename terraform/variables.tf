@@ -25,30 +25,37 @@ variable "bucket_name" {
 
 variable "api_gateway_name" {
   description = "api gateway name"
-  type = string
-  
+  type        = string
+
 }
 
 variable "lambda_func_name" {
   description = "lambda function name"
-  type = string
+  type        = string
 }
 
 variable "athena_bucket_name" {
   description = "S3 Bucket name for Athena query results"
   type        = string
   default     = "startsmart-athena-results"
-  
+
 }
 
 variable "athena_lamdba_func_name" {
   description = "athena trigger lambda function name"
-  type = string
-  default = "athena-trigger-function"
+  type        = string
+  default     = "athena-trigger-function"
 }
 
 variable "enable_force_destroy" {
   description = "Enable force destroy for ALL S3 buckets"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
+}
+
+variable "execution_frequency" {
+  description = "Execution frequency for the glue crawler and Athena query trigger. E.g., 'cron(0 5 * * ? *)' for daily at 5 AM UTC"
+  type        = string
+  default     = "cron(0 5 * * ? *)"  # Default to every 3 minutescron(0/3 * * * ? *) for testing purposes
+
 }
