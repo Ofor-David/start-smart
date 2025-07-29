@@ -8,7 +8,7 @@ ATHENA_DATABASE = 'event-lake-db'
 ATHENA_TABLE = 'event_events'
 ATHENA_OUTPUT = os.environ['ATHENA_OUTPUT_LOCATION']
 
-def lambda_handler(event, context):
+def handler(event, context):
     today = datetime.datetime.now()
     year = today.strftime('%Y')
     month = today.strftime('%m')
