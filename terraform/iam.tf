@@ -124,3 +124,12 @@ resource "aws_iam_role_policy" "athena__policy" {
   })
 
 }
+
+# Allow eventbridge to invoke the Athena lambda function
+resource "aws_lambda_permission" "allow_eventbridge" {
+  statement_id  = "AllowExecutionFromEventBridge"
+  action        = "lambda:InvokeFunction"
+  function_name = var.athena_lamdba_func_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.daily_athena_query.arn
+}
