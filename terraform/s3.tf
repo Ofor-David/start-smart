@@ -24,10 +24,10 @@ resource "aws_s3_bucket_versioning" "event_lake_versioning" {
   }
 }
 
-# Athena query result bucket
+# Athena query result bucket 
 resource "aws_s3_bucket" "athena_results_bucket" {
   bucket = var.athena_bucket_name
-  
+
 }
 
 resource "aws_s3_object" "results" {
@@ -39,7 +39,7 @@ resource "aws_s3_object" "results" {
     Name        = "StartSmart Athena Results"
     Environment = "dev"
   }
-
+  
 }
 
 resource "aws_s3_bucket_public_access_block" "athena_results_block" {

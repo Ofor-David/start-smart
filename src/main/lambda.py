@@ -55,7 +55,6 @@ def handler(event, context):
         body = json.loads(event['body'])  # parses req payload to python dict
     except Exception:
         return make_response(400, {"error": "Invalid JSON in request body"})
-
     is_valid, error_message = validate_event_data(body)
     if not is_valid:
         return make_response(400, {"error": error_message})

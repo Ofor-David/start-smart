@@ -40,3 +40,9 @@ variable "athena_bucket_name" {
   default     = "startsmart-athena-results"
   
 }
+
+variable "athena_lamdba_func_name" {
+  description = "athena trigger lambda function name"
+  type = string
+  default = "athena-trigger-function"
+}
