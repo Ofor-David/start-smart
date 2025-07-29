@@ -50,7 +50,7 @@ resource "aws_lambda_function" "athena_trigger" {
 
   environment {
     variables = {
-      ATHENA_OUTPUT_LOCATION = "s3://${var.athena_bucket_name}/athena-output/"
+      ATHENA_OUTPUT_LOCATION = "s3://${var.athena_bucket_name}/results/"
     }
   }
 }

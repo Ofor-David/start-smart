@@ -32,17 +32,13 @@ resource "aws_s3_bucket" "athena_results_bucket" {
 
 }
 
-resource "aws_s3_object" "results" {
+resource "aws_s3_object" "athena_results_prefix" {
   bucket = aws_s3_bucket.athena_results_bucket.id
   key    = "results/"
-  content = "This bucket is used for Athena query results."
-
-  tags = {
-    Name        = "StartSmart Athena Results"
-    Environment = "dev"
-  }
+  content = ""
   
 }
+
 
 resource "aws_s3_bucket_public_access_block" "athena_results_block" {
   bucket = aws_s3_bucket.athena_results_bucket.id
