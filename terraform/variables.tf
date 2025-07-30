@@ -59,3 +59,24 @@ variable "execution_frequency" {
   default     = "cron(0 5 * * ? *)"  # Default to every 3 minutescron(0/3 * * * ? *) for testing purposes
 
 }
+
+variable "firehose_name" {
+  description = "Name of the Kinesis Firehose delivery stream"
+  type        = string
+  default     = "event-stream"
+  
+}
+
+variable "firehose_buffering_interval" {
+  description = "Buffering interval for Kinesis Firehose in seconds"
+  type        = number
+  default     = 60  # Default to 60 seconds
+  
+}
+
+variable "firehose_buffering_size" {
+  description = "Buffering size for Kinesis Firehose in MB"
+  type        = number
+  default     = 64  # Default to 64 MB
+  
+}

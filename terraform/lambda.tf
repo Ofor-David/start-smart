@@ -18,6 +18,7 @@ resource "aws_lambda_function" "startsmart_handler" {
   environment {
     variables = {
       BUCKET_NAME = var.bucket_name
+      FIREHOSE_NAME = var.firehose_name
     }
   }
 }

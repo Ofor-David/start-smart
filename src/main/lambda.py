@@ -5,9 +5,12 @@ import json
 import uuid
 import boto3
 import os
+import base64
 
 s3 = boto3.client("s3")
+firehose = boto3.client("firehose")
 BUCKET_NAME = os.environ['BUCKET_NAME']
+FIREHOSE_NAME = os.environ['FIREHOSE_NAME']
 def make_response(status_code, body_dict):
     # Wraps the response in proper API Gateway format with CORS header
     return {
@@ -40,10 +43,12 @@ def validate_event_data(data):
 
 def enrich_event_data(data):
     "add server side metadata to the event"
+    
     enriched = data.copy()
     enriched["eventId"] = str(uuid.uuid4())  # Unique ID
     enriched["receivedAt"] = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")  # Server time in UTC
     enriched["source"] = "startsmart-web"  # Optional, helps later for logs
+    
     return enriched
 
 def handler(event, context):
@@ -60,31 +65,34 @@ def handler(event, context):
         return make_response(400, {"error": error_message})
 
     enriched_event = enrich_event_data(body)
-    
-    # save to s3
+    received_at = datetime.fromisoformat(enriched_event["receivedAt"].replace("Z", ""))
     
     # Parse the UTC timestamp from receivedAt to get date components
-    received_at = datetime.fromisoformat(enriched_event["receivedAt"].replace("Z", ""))
     year = received_at.year
     month = f"{received_at.month:02d}"
     day = f"{received_at.day:02d}"
     
+    # Extract year/month/day fields and add them to the event payload
+    enriched_event["year"] = str(year)
+    enriched_event["month"] = month
+    enriched_event["day"] = day
+    
+    print(enriched_event) # debugging purpose
+    
+    # push to firehsose
     try:
-        object_key = f"events/year={year}/month={month}/day={day}/{enriched_event['eventId']}.json"
-        
-        s3.put_object(
-            Bucket=BUCKET_NAME,
-            Key=object_key,
-            Body=json.dumps(enriched_event),
-            ContentType="application/json",
+        firehose.put_record(
+            DeliveryStreamName=FIREHOSE_NAME,
+            Record={
+                "Data": (json.dumps(enriched_event) + "\n").encode("utf-8")
+            }
         )
     except Exception as e:
-        print("s3 upload failed:", str(e))
-        return make_response(500, {"failed to save event to storage"})
+        print("firehose failed:", str(e))
+        return make_response(500, {"error": "failed to save event to delivery stream"})
+        
     # Return success response
     return make_response(200, {
         "message": "Event received and enriched successfully",
         "data": enriched_event
     })
-    
- 

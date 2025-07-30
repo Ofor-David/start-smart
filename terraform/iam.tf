@@ -1,3 +1,4 @@
+# TODO: remove unnecessary permissions
 # iam role for main lambda function
 resource "aws_iam_role" "lambda_exec_role" {
   name = "startsmart-lambda-role"
@@ -15,7 +16,6 @@ resource "aws_iam_role" "lambda_exec_role" {
     ]
   })
 }
-
 resource "aws_iam_role_policy" "s3_put_policy" {
   name = "allow-s3-put-events"
   role = aws_iam_role.lambda_exec_role.name
@@ -27,6 +27,13 @@ resource "aws_iam_role_policy" "s3_put_policy" {
         Action   = "s3:PutObject",
         Resource = "${aws_s3_bucket.event_lake.arn}/events/*"
 
+      },
+      {
+        Effect   = "Allow",
+        Action   = [
+          "firehose:PutRecord",
+        ],
+        Resource = "${aws_kinesis_firehose_delivery_stream.events_firehose.arn}"
       }
     ]
   })
@@ -141,4 +148,61 @@ resource "aws_lambda_permission" "allow_eventbridge" {
   function_name = var.athena_lamdba_func_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.daily_athena_query.arn
+}
+
+# firehose role
+resource "aws_iam_role" "firehose_role" {
+  name = "startsmart-firehose-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "firehose.amazonaws.com"
+        },
+        Action = "sts:AssumeRole",
+      },
+    ]
+  })
+}
+# firehose policy for s3
+resource "aws_iam_role_policy" "firehose_policy" {
+  name = "firehose-s3-policy"
+  role = aws_iam_role.firehose_role.id
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:PutObject",
+          "s3:GetBucketLocation",
+          "s3:ListBucket",
+        ],
+        Resource = [
+          "${aws_s3_bucket.event_lake.arn}",
+          "${aws_s3_bucket.event_lake.arn}/*"
+        ]
+      },
+      {
+        Effect   = "Allow",
+        Action   = [
+          "logs:PutLogEvents", 
+          "logs:CreateLogStream",
+          "logs:createLogGroup"
+          ],
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow",
+        Action   = [
+          "firehose:PutRecord",
+        ],
+        Resource = "${aws_kinesis_firehose_delivery_stream.events_firehose.arn}"
+      }
+    ]
+  })
+
 }
